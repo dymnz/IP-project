@@ -4,10 +4,10 @@ image = imread('./test3_1.bmp');
 tImage = image;
 % figure; imshow(image);
 
-Neighbor = 3;
+Neighbor = 1;
 MaskSize = 2*Neighbor+1;
-E = 10;
-K = [0.6 0 1];
+E = 100;
+K = [0.5 0 0.2];
 
 iHist = zeros(1, 256);
 for i = 1 : size(image, 1)
@@ -49,7 +49,8 @@ for i = 1+Neighbor : size(image, 1)-Neighbor
         
         if LocalMean <= K(1)*GlobalMean ...
             && (K(2)*GlobalVar <= LocalVar && LocalVar <= K(3)*GlobalVar)
-            tImage(i, r) = E*image(i, r);
+            tImage(i, r) = min(E*image(i, r), 255);
+%             tImage(i, r) = 255;
             C = C + 1;
         end
         
