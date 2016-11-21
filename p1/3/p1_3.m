@@ -1,13 +1,20 @@
 clear; close all;
 
+MaskSizes = [3 7 13 21 31];
+
+for round = 1 : numel(MaskSizes)
+tic
+
+
 image = imread('./test3_1.bmp');
 tImage = image;
-% figure; imshow(image);
+% tImage = zeros(size(image));
 
-Neighbor = 1;
-MaskSize = 2*Neighbor+1;
+MaskSize = MaskSizes(round);
+Neighbor = (MaskSize-1) / 2;
+
 E = 100;
-K = [0.5 0 0.2];
+K = [1 0 1];
 
 iHist = zeros(1, 256);
 for i = 1 : size(image, 1)
@@ -44,18 +51,19 @@ for i = 1+Neighbor : size(image, 1)-Neighbor
                 LocalVar = LocalVar + ...
                     (double(image(i+m, r+n)) - double(LocalMean))^2;
             end
-        end    
+        end
         LocalVar = LocalVar / (MaskSize^2);
         
         if LocalMean <= K(1)*GlobalMean ...
-            && (K(2)*GlobalVar <= LocalVar && LocalVar <= K(3)*GlobalVar)
+                && (K(2)*GlobalVar <= LocalVar && LocalVar <= K(3)*GlobalVar)
             tImage(i, r) = min(E*image(i, r), 255);
-%             tImage(i, r) = 255;
+            % tImage(i, r) = 255;
             C = C + 1;
         end
         
     end
 end
+disp(sprintf('For maskSize = %d : %.3f', MaskSizes(round), toc));
 
-figure; imshow(tImage);
+end
 
