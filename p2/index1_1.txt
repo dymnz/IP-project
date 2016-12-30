@@ -1,0 +1,28 @@
+struct Complex
+{
+public:
+  float real;
+  float imaginary;
+  float magnitude; 
+  float phase;
+  
+  Complex(float _real, float _imaginary)
+  {
+    real = _real;
+    imaginary = _imaginary;
+    magnitude = sqrt(real * real + imaginary * imaginary);
+    
+    if (real != 0)
+    {
+       phase = atan(imaginary / real) * 180 / 3.14159;
+    }
+    else if (imaginary > 0)
+    {
+       phase = 90;
+    }
+    else
+    {
+       phase = -90;
+    }
+  }
+}
