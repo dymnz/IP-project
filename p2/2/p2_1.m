@@ -15,23 +15,21 @@ disp(sprintf('1-1: mean:%d dev:%d', round(Mean), round(sqrt(Var))));
 [Mean, Var] = MeanVar(Imgs{1}, 272, 79, 280, 59);
 disp(sprintf('1-2: mean:%d dev:%d', round(Mean), round(sqrt(Var))));
 
-%% Histogram
-Hists = cell(4, 1);
-for i = 1 : 4
-    Hist = zeros(1, 256);
-    for m = 1 : size(Imgs{i}, 1)
-        for n = 1 : size(Imgs{i}, 2)
-            Hist(Imgs{i}(m, n)+1) = Hist(Imgs{i}(m, n)+1) + 1;
-        end
-    end
-    Hists{i} = Hist;    
-end
-
-%% Display Histogram
-for i = 1 : 4
-    figure; bar(1:256, Hists{i}); 
-    axis([1 256 1 1500]);
-end
+% %% Histogram
+% Hists = cell(4, 1);
+% for i = 1 : 4
+%     Hist = zeros(1, 256);
+%     for m = 1 : size(Imgs{i}, 1)
+%         for n = 1 : size(Imgs{i}, 2)
+%             Hist(Imgs{i}(m, n)+1) = Hist(Imgs{i}(m, n)+1) + 1;
+%         end
+%     end
+%     Hists{i} = Hist;    
+% end
+% %% Display Histogram
+% for i = 1 : 4
+%     figure; bar(1:256, Hists{i}); 
+% end
 
 % %% Median Filter
 % MedianImgs = cell(4, 1);
@@ -58,7 +56,7 @@ end
 
 % %% AdaptiveMedian Filter
 % InitNeighborCount = 1;
-% MaxNeighborCount = 3;
+% MaxNeighborCount = 4;
 % AdaptiveMedianImgs = cell(4, 1);
 % for i = 1 : 4
 %     AdaptiveMedianImgs{i} = uint8(AdaptiveMedianFilter(Imgs{i}, ...
