@@ -9,6 +9,12 @@ for i = 1 : 4
     Imgs{i} = imread(sprintf('./test2_%d.bmp', i)); 
 end
 
+%% Noise
+[Mean, Var] = MeanVar(Imgs{1}, 459, 95, 21, 81);
+disp(sprintf('1-1: mean:%d dev:%d', round(Mean), round(sqrt(Var))));
+[Mean, Var] = MeanVar(Imgs{1}, 272, 79, 280, 59);
+disp(sprintf('1-2: mean:%d dev:%d', round(Mean), round(sqrt(Var))));
+
 %% Histogram
 Hists = cell(4, 1);
 for i = 1 : 4
@@ -21,10 +27,11 @@ for i = 1 : 4
     Hists{i} = Hist;    
 end
 
-% %% Display Histogram
-% % for i = 1 : 4
-% %     figure; bar(1:256, Hists{i});    
-% % end
+%% Display Histogram
+for i = 1 : 4
+    figure; bar(1:256, Hists{i}); 
+    axis([1 256 1 1500]);
+end
 
 % %% Median Filter
 % MedianImgs = cell(4, 1);
@@ -73,15 +80,15 @@ end
 %     figure; imshow(MaxImgs{i});
 % end
 
-%% Alpha-Trimmed Filter
-NeighborCount = 1;
-D = 2;
-AlphaTrimmedImgs = cell(4, 1);
-for i = 1 : 4
-    AlphaTrimmedImgs{i} = uint8(AlphaTrimmedFilter(Imgs{i}, NeighborCount, D));
-end
-%% Display Midpoint Images
-for i = 1 : 4
-    figure; imshow(AlphaTrimmedImgs{i});
-end
+% %% Alpha-Trimmed Filter
+% NeighborCount = 1;
+% D = 2;
+% AlphaTrimmedImgs = cell(4, 1);
+% for i = 1 : 4
+%     AlphaTrimmedImgs{i} = uint8(AlphaTrimmedFilter(Imgs{i}, NeighborCount, D));
+% end
+% %% Display Midpoint Images
+% for i = 1 : 4
+%     figure; imshow(AlphaTrimmedImgs{i});
+% end
 
