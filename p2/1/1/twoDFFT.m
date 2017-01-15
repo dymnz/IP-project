@@ -4,7 +4,7 @@ N = size(Data, 1);
 
 colResult = zeros(N, M);
 % Column operaion
-for col = 1 : N
+for col = 1 : M
 odData = Data(:, col);
 colResult(:, col) = oneDFFT(odData);
 end
