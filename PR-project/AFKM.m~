@@ -1,0 +1,29 @@
+% Adaptive Fuzzy-K-means Clustering Algorithm
+clear; close all;
+
+% Parameters
+n_cluster = 4;
+fuzziness = 2;
+
+file_name = '1.jpg';
+data_dir = './pics/';
+
+% Read the image
+img = imread([data_dir file_name]);
+
+n_row = size(img, 1);
+n_col = size(img, 2);
+
+% Create random centers
+values = unique(img);
+random_indices = randperm(length(values));
+
+centers = values(random_indices(1:n_cluster));
+
+% K-means for initial center
+distances = zeros([size(img) 4]);
+
+for i = 1 : n_cluster
+    distances(:, :,)
+
+
