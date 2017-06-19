@@ -2,12 +2,12 @@
 clear; close all;
 
 % Parameters
-n_cluster = 4;
+n_cluster = 3;
 fuzziness = 2;
 stopping_threshold = 1e-4;
 update_rate = 0.1;
 
-file_name = '1.jpg';
+file_name = '3.jpg';
 data_dir = './pics/';
 
 % Read the image
@@ -17,9 +17,6 @@ n_row = size(img, 1);
 n_col = size(img, 2);
 
 img = im2double(img);
-
-figure;
-imshow(img);
 
 %% K-means for initial center
 % Create centers
@@ -31,6 +28,11 @@ for j = 1 : n_cluster
 end
 centers = min(centers, 1);
 
+fprintf('Centers:\n');
+for j = 1 : n_cluster
+    fprintf('%.3f, ', centers(j));
+end
+fprintf('\n');
 
 %% AFKM
 old_centers = centers;
@@ -68,22 +70,7 @@ while true
             end
         end
     end
-
-    % Find belongingness
-    for j = 1 : n_cluster
-        belongingnesses(:, :, j) = centers(j)./memberships(:, :, j); %#ok<*SAGROW>
-    end
-
-    % Find error term
-    norm_belongingnesses = belongingnesses./sum(belongingnesses, 3);
-    e = belongingnesses - norm_belongingnesses;
-
-    % Update membership
-    for j = 1 : n_cluster
-        memberships(:, :, j) = memberships(:, :, j) + ...
-                update_rate * centers(j) .* e(:, :, j);
-    end
-
+    
     % Update center
     fprintf('Centers:\n');
     for j = 1 : n_cluster
@@ -103,13 +90,40 @@ while true
     old_centers = centers;
 end    
 
-%% Use the maximum membership as class label
-[val, ind] = max(memberships, [], 3);
+fprintf('Centers:\n');
+for j = 1 : n_cluster
+    fprintf('%.3f, ', centers(j));
+end
+fprintf('\n');
 
+%% Use the maximum membership as class label
+% Find new distances
+distances = abs( repmat(img, [1, 1, n_cluster])...
+    - repmat(reshape(centers, [1, 1, n_cluster]), [n_row n_col 1]) );
+
+% Find membership
+for j = 1 : n_cluster
+    for k = 1 : n_cluster
+        memberships(:, :, j) = memberships(:, :, j) + ...
+                    (distances(:, :, j)./distances(:, :, k)) ...
+                    .^(2/(fuzziness - 1));            
+    end  
+    memberships(:, :, j) =  memberships(:, :, j).^-1;
+end
+
+% Fix the case where distances(r, c, k) = 0
+for r = 1 : n_row
+    for c = 1 : n_col
+        if distances(r, c, k) == 0
+            memberships(c, c, :) = zeros([1, 1, n_cluster]);
+            memberships(r, c, k) = 1;
+        end
+    end
+end
+[val, ind] = max(memberships, [], 3);
 for j = 1 : n_cluster
     img(ind==j) = centers(j);    
 end
-
 
 figure;
 imshow(img);

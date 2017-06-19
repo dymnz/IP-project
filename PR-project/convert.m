@@ -1,4 +1,3 @@
-img = imread('./pics/2.jpeg');
-img = rgb2gray(img);
+img = imread('./pics/3.png');
 
-imwrite(img, '2.jpg');
+imwrite(img, './pics/3.jpg');
