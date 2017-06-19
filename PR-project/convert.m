@@ -1,4 +1,4 @@
-img = imread('./pics/1.png');
+img = imread('./pics/2.jpeg');
 img = rgb2gray(img);
 
-imwrite(img, '1.jpg');
+imwrite(img, '2.jpg');

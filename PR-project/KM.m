@@ -1,10 +1,11 @@
 %% K-means Clustering Algorithm
-clear; close all;
+% clear; close all;
 
 % Parameters
-n_cluster = 3;
+n_cluster = 4;
+stopping_threshold = 1e-9;
 
-file_name = '1.jpg';
+file_name = '2.jpg';
 data_dir = './pics/';
 
 % Read the image
@@ -38,11 +39,10 @@ while true
         centers(i) = mean(img(ind==i));
     end
 
-    if mean(abs(old_centers - sort(centers))) < 0.000001
+    if mean(abs(old_centers - sort(centers))) < stopping_threshold
         break;
     end
 
-    %
 end
 disp(loop)
 

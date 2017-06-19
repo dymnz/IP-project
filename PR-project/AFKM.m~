@@ -1,9 +1,10 @@
-% Adaptive Fuzzy-K-means Clustering Algorithm
+%% Adaptive Fuzzy-K-means Clustering Algorithm
 clear; close all;
 
 % Parameters
 n_cluster = 4;
 fuzziness = 2;
+stopping_threshold = 1e-9;
 
 file_name = '1.jpg';
 data_dir = './pics/';
@@ -14,16 +15,38 @@ img = imread([data_dir file_name]);
 n_row = size(img, 1);
 n_col = size(img, 2);
 
+img = im2double(img);
+
+%% K-means for initial center
 % Create random centers
 values = unique(img);
 random_indices = randperm(length(values));
 
 centers = values(random_indices(1:n_cluster));
 
-% K-means for initial center
-distances = zeros([size(img) 4]);
+% Find minimum distance to center
+distances = abs( repmat(img, [1, 1, n_cluster])...
+    - repmat(reshape(centers, [1, 1, n_cluster]), [n_row n_col 1]) );
 
+[val, ind] = min(distances, [], 3);
+
+% Find new cluster centers
 for i = 1 : n_cluster
-    distances(:, :,)
+    centers(i) = mean(img(ind==i));
+end
 
+%imshow(ind/n_cluster);
 
+%% AFKM
+memberships = zeros(n_row, n_col, n_cluster);
+
+% Find new distances
+distances = abs( repmat(img, [1, 1, n_cluster])...
+    - repmat(reshape(centers, [1, 1, n_cluster]), [n_row n_col 1]) );
+
+% Find membership
+for j = 1 : n_cluster
+    for k = 1 : n_cluster
+        denom = (distances(:, :, j)./distances(:, :, k)).^(2/(fuzz))
+    end   
+end
