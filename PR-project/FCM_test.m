@@ -1,8 +1,8 @@
 %% Adaptive Fuzzy-K-means Clustering Algorithm
-clear; close all;
+% clear; close all;
 
 % Parameters
-n_cluster = 3;
+n_cluster = 4;
 fuzziness = 2;
 stopping_threshold = 1e-4;
 update_rate = 0.1;

@@ -7,7 +7,7 @@ fuzziness = 2;
 stopping_threshold = 1e-4;
 update_rate = 0.1;
 
-file_name = '1.jpg';
+file_name = '3.jpg';
 data_dir = './pics/';
 
 % Read the image
@@ -18,14 +18,12 @@ n_col = size(img, 2);
 
 img = im2double(img);
 
-figure;
-imshow(img);
-
 %% K-means for initial center
 % Create centers
 max_v = max(max(img)); 
 min_v = min(min(img));
 
+centers = zeros(n_cluster, 1);
 for j = 1 : n_cluster
     centers(j) = min_v + (2*j+1)*(max_v-min_v)/(2*n_cluster);
 end
@@ -64,24 +62,25 @@ while true
                         memberships(r, c, k) = 1;
                         break;
                     end
-                end                
+                end
             end
         end
     end
 
     % Find belongingness
+    belongingnesses = zeros(n_cluster, 1);
     for j = 1 : n_cluster
-        belongingnesses(:, :, j) = centers(j)./memberships(:, :, j); %#ok<*SAGROW>
+        belongingnesses(j) = centers(j)/sum(sum(memberships(:, :, j))); 
     end
 
     % Find error term
-    norm_belongingnesses = belongingnesses./sum(belongingnesses, 3);
+    norm_belongingnesses = belongingnesses./n_cluster;
     e = belongingnesses - norm_belongingnesses;
 
     % Update membership
     for j = 1 : n_cluster
         memberships(:, :, j) = memberships(:, :, j) + ...
-                update_rate * centers(j) .* e(:, :, j);
+                update_rate * centers(j) .* e(j);
     end
 
     % Update center
