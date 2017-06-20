@@ -16,7 +16,7 @@ img = imread([data_dir file_name]);
 n_row = size(img, 1);
 n_col = size(img, 2);
 
-[Ifc, C] = adaptivefuzzycmeans(img, n_cluster, 15);
+[Ifc, C] = fuzzycmeans(img, n_cluster, 15);
 
 for i = 1 : n_cluster
     img(Ifc==i) = C(i);

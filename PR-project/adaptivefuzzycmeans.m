@@ -31,7 +31,7 @@ while(TFcm<Tn)
     tmp = [];
     P = [];
     D=zeros(H,W,1);
-    
+    ic = c;
   for i=1:k  
     U=repmat(cc(i),H,W);
     c=cat(3,c,U);
@@ -65,11 +65,16 @@ while(TFcm<Tn)
     
     B = zeros(k, 1);
     for i = 1 : k
-        B(i) = c(i)./ sum(sum(M(:, :, i)));
+        B(i) = cc(i) / sum(sum(M(:, :, i)));
     end
     
+    NB = zeros(k, 1);
+    for i = 1 : k
+        NB(i) = cc(i) / sum(sum(M(:, :, i))) / sum(cc);
+    end    
+    
     for i=1:k        
-        M(:, :, i) = M(:, :, i) + 0.1 * (B(i)) * c(i);
+        M(:, :, i) = M(:, :, i) + 0.1 * (B(i) - NB(i)) * cc(i);
         CI(i)=sum(sum(M(:, :, i).*I))/sum(sum(M(:, :, i)));
     end
     
