@@ -1,4 +1,4 @@
-function[Ifc,CI] = adaptivefuzzycmeans(I,k,Tn)
+function[Ifc,CI] = adaptivefuzzycmeans2(I,k,Tn)
 
 % This program illustrates the Fuzzy c-means segmentation of an image. 
 % Author: Krishna Kumar
@@ -63,24 +63,22 @@ while(TFcm<Tn)
         M(:, :, i) = Q(:,:,i).*Q(:,:,i);
     end
     
-    B = zeros(k, 1);
+    B = zeros(H,W,k);
     for i = 1 : k
-        B(i) = cc(i) / sum(sum(M(:, :, i)));
+        B(:, :, i) = cc(i) ./ M(:, :, i);
     end
     
-    NB = zeros(k, 1);
+    NB = zeros(H, W, 1);
     for i = 1 : k
-        NB(i) = 1 / sum(sum(M(:, :, i)));
+        NB(i) = mean(mean(B(:, :, i)));
     end    
     
-    NB = B ./ sum(B);
-    
     for i=1:k        
-        e = B(i) - NB(i);
+        e = (B(:, :, i) - NB(i));
         mean(mean(M(:, :, i)))
-        mean(mean(0.1 * cc(i) * e))
+        mean(mean(0.1 * cc(i) .* e))
         
-        M(:, :, i) = M(:, :, i) + 0.1 * e * cc(i);
+        M(:, :, i) = M(:, :, i) + 0.1 * cc(i) .* e;
         CI(i) = sum(sum(M(:, :, i).*I))/sum(sum(M(:, :, i)))
     end
     

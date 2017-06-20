@@ -1,7 +1,14 @@
-A = cat(3, cat(3, 1*magic(3), 2*magic(3)), 3*magic(3))
+C = [ 164.1828 76.1030  210.0554 124.0219    ];
 
-C = cat(3, cat(3, magic(3), magic(3)), magic(3))
-
-for i=1:3
-    B(:,:,i)=C(:,:,i).*A;
+for i = 1 : n_cluster
+    img(Ifc==i) = C(i);
 end
+
+if ~exist('testing', 'var')
+    figure;
+    imshow(img);
+end
+
+disp(C);
+
+imwrite(img, sprintf('./temp/%s_AFKM2.jpg', file_name));

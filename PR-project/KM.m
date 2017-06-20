@@ -1,12 +1,14 @@
 %% K-means Clustering Algorithm
-% clear; close all;
+if ~exist('testing', 'var')
+    clear; close all;
+    data_dir = './pics/';
+    file_name = '3.jpg';
+    n_cluster = 4;
+end
 
 % Parameters
-n_cluster = 3;
 stopping_threshold = 1e-4;
 
-file_name = '3.jpg';
-data_dir = './pics/';
 
 % Read the image
 img = imread([data_dir file_name]);
@@ -41,16 +43,10 @@ while true
     % Find new cluster centers
     for i = 1 : n_cluster
         centers(i) = mean(img(ind==i));
-    end
-    
-    fprintf('Centers:\n');
-    for j = 1 : n_cluster
-        fprintf('%.3f, ', centers(j));
-    end
-    fprintf('\n');
+    end   
     
     delta = mean(abs(old_centers - sort(centers)));
-    fprintf('delta: %f\n', delta);
+%     fprintf('delta: %f\n', delta);
     
     if mean(abs(old_centers - sort(centers))) < stopping_threshold
         break;
@@ -68,5 +64,12 @@ distances = abs( repmat(img, [1, 1, n_cluster])...
 for i = 1 : n_cluster
     img(ind==i) = centers(i);    
 end
-figure;
-imshow(img);
+
+if ~exist('testing', 'var')
+    figure;
+    imshow(img);
+end
+
+disp(255*centers');
+
+imwrite(img, sprintf('./temp/%s_KM.jpg', file_name));
