@@ -2,7 +2,7 @@
 % clear; close all;
 
 % Parameters
-n_cluster = 4;
+n_cluster = 3;
 stopping_threshold = 1e-4;
 
 file_name = '3.jpg';
@@ -22,6 +22,7 @@ img = im2double(img);
 max_v = max(max(img)); 
 min_v = min(min(img));
 
+centers = zeros(n_cluster, 1);
 for j = 1 : n_cluster
     centers(j) = min_v + (2*j+1)*(max_v-min_v)/(2*n_cluster);
 end
@@ -42,6 +43,12 @@ while true
         centers(i) = mean(img(ind==i));
     end
     
+    fprintf('Centers:\n');
+    for j = 1 : n_cluster
+        fprintf('%.3f, ', centers(j));
+    end
+    fprintf('\n');
+    
     delta = mean(abs(old_centers - sort(centers)));
     fprintf('delta: %f\n', delta);
     
@@ -51,11 +58,7 @@ while true
 
 end
 
-fprintf('Centers:\n');
-for j = 1 : n_cluster
-    fprintf('%.3f, ', centers(j));
-end
-fprintf('\n');
+
 
 distances = abs( repmat(img, [1, 1, n_cluster])...
     - repmat(reshape(centers, [1, 1, n_cluster]), [n_row n_col 1]) );

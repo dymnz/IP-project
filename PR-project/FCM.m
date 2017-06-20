@@ -2,7 +2,7 @@
 % clear; close all;
 
 % Parameters
-n_cluster = 4;
+n_cluster = 3;
 fuzziness = 2;
 stopping_threshold = 1e-4;
 update_rate = 0.1;
@@ -26,7 +26,7 @@ min_v = min(min(img));
 for j = 1 : n_cluster
     centers(j) = min_v + (2*j+1)*(max_v-min_v)/(2*n_cluster);
 end
-centers = min(centers, 1);
+% centers = min(centers, 1);
 
 fprintf('Centers:\n');
 for j = 1 : n_cluster
