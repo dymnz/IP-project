@@ -1,8 +1,8 @@
 clear; close all;
 
-file_name = '3.jpg';
+file_name = '4.jpg';
 data_dir = './pics/';
-n_cluster = 4;
+n_cluster = 3;
 
 testing = true;
 

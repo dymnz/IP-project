@@ -68,17 +68,17 @@ while(TFcm<Tn)
         B(i) = cc(i) / sum(sum(M(:, :, i)));
     end
     
-    NB = zeros(k, 1);
-    for i = 1 : k
-        NB(i) = 1 / sum(sum(M(:, :, i)));
-    end    
+%     NB = zeros(k, 1);
+%     for i = 1 : k
+%         NB(i) = 1 / sum(sum(M(:, :, i)));
+%     end    
     
     NB = B ./ sum(B);
     
     for i=1:k        
         e = B(i) - NB(i);
-        mean(mean(M(:, :, i)))
-        mean(mean(0.1 * cc(i) * e))
+%         mean(mean(M(:, :, i)))
+%         mean(mean(0.1 * cc(i) * e))
         
         M(:, :, i) = M(:, :, i) + 0.1 * e * cc(i);
         CI(i) = sum(sum(M(:, :, i).*I))/sum(sum(M(:, :, i)))

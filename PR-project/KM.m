@@ -72,4 +72,4 @@ end
 
 disp(255*centers');
 
-imwrite(img, sprintf('./temp/%s_KM.jpg', file_name));
+imwrite(img, sprintf('./temp/%s_KM_c%d.jpg', file_name, n_cluster));
