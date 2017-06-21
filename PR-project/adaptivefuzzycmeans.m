@@ -1,4 +1,4 @@
-function[Ifc,CI] = adaptivefuzzycmeans(I,k,Tn)
+function[Ifc,CI, M, oM] = adaptivefuzzycmeans(I,k,Tn, cc)
 
 % This program illustrates the Fuzzy c-means segmentation of an image. 
 % Author: Krishna Kumar
@@ -21,7 +21,6 @@ end
 
 %Random initialization of cluster centers
 
-cc = randi(250,1,k);
 TFcm=0;
 %-----------------------------------------------------------------
 
@@ -42,7 +41,6 @@ while(TFcm<Tn)
     R=cat(3,R,r);
   end
    
-   
     distance=IC-c;
     distance=distance.*distance+R;
     
@@ -62,6 +60,7 @@ while(TFcm<Tn)
     for i = 1 : k
         M(:, :, i) = Q(:,:,i).*Q(:,:,i);
     end
+    oM = M;
     
     B = zeros(k, 1);
     for i = 1 : k
@@ -77,11 +76,11 @@ while(TFcm<Tn)
     
     for i=1:k        
         e = B(i) - NB(i);
-%         mean(mean(M(:, :, i)))
+%          disp(mean(mean(M(:, :, i))));
 %         mean(mean(0.1 * cc(i) * e))
         
         M(:, :, i) = M(:, :, i) + 0.1 * e * cc(i);
-        CI(i) = sum(sum(M(:, :, i).*I))/sum(sum(M(:, :, i)))
+        CI(i) = sum(sum(M(:, :, i).*I))/sum(sum(M(:, :, i)));
     end
     
     
@@ -104,7 +103,7 @@ while(TFcm<Tn)
         end
     end
  %------------------------------------------------------------------
-   if max(tmp)<0.0001
+   if TFcm > 3 & max(tmp) < 0.0001
          break;
   else
    cc = CI;       %updating cluster centers

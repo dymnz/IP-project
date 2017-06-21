@@ -2,8 +2,8 @@
 if ~exist('testing', 'var')
     clear; close all;
     data_dir = './pics/';
-    file_name = '3.jpg';
-    n_cluster = 4;
+    file_name = '4.jpg';
+    n_cluster = 3;
 end
 
 % Parameters
@@ -60,6 +60,33 @@ distances = abs( repmat(img, [1, 1, n_cluster])...
     - repmat(reshape(centers, [1, 1, n_cluster]), [n_row n_col 1]) );
 
 [val, ind] = min(distances, [], 3);
+
+%%
+img = im2double(imread([data_dir file_name]));
+values = unique(img);
+
+mems = zeros(length(values), n_cluster);
+for i = 1 : length(values)
+    for c = 1 : n_cluster
+
+        inx = find(img==values(i));
+        if ind(inx(1)) == c
+            mems(i, c) = 1;
+        else
+            mems(i, c) = 0;
+        end
+    end
+end
+
+figure; hold on;
+for i = 1 : n_cluster
+    plot(values, mems(:, i));
+    plot(centers(i), 0,'o', 'Color', 'r');
+end
+title('KM Membership');
+
+
+%%
 
 for i = 1 : n_cluster
     img(ind==i) = centers(i);    

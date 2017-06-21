@@ -1,4 +1,4 @@
-function[Ifc,CI, M] = fuzzycmeans(I,k,Tn, cc)
+function[Ifc,CI] = adaptivefuzzycmeans2(I,k,Tn)
 
 % This program illustrates the Fuzzy c-means segmentation of an image. 
 % Author: Krishna Kumar
@@ -21,7 +21,7 @@ end
 
 %Random initialization of cluster centers
 
-cc = rand(1,k);
+cc = randi(250,1,k);
 TFcm=0;
 %-----------------------------------------------------------------
 
@@ -31,7 +31,7 @@ while(TFcm<Tn)
     tmp = [];
     P = [];
     D=zeros(H,W,1);
-    
+    ic = c;
   for i=1:k  
     U=repmat(cc(i),H,W);
     c=cat(3,c,U);
@@ -53,6 +53,7 @@ while(TFcm<Tn)
     end
     
     for i=1:k
+        % normalized distance
         dist(:,:,i)=distance(:,:,i).*D;
         Q(:,:,i)=1./dist(:,:,i);
     end
@@ -62,8 +63,25 @@ while(TFcm<Tn)
         M(:, :, i) = Q(:,:,i).*Q(:,:,i);
     end
     
-    for i=1:k
-     CI(i)=sum(sum(Q(:,:,i).*Q(:,:,i).*I))/sum(sum(Q(:,:,i).*Q(:,:,i)));
+    B = zeros(k, 1);
+    for i = 1 : k
+        B(i) = cc(i) / sum(sum(M(:, :, i)));
+    end
+    
+%     NB = zeros(k, 1);
+%     for i = 1 : k
+%         NB(i) = 1 / sum(sum(M(:, :, i)));
+%     end    
+    
+    NB = B ./ sum(B);
+    
+    for i=1:k        
+        e = B(i) - NB(i);
+%          disp(mean(mean(M(:, :, i))));
+%         mean(mean(0.1 * cc(i) * e))
+        
+        M(:, :, i) = M(:, :, i) + 0.1 * e * cc(i);
+        CI(i) = sum(sum(M(:, :, i).*I))/sum(sum(M(:, :, i)))
     end
     
     
@@ -86,7 +104,7 @@ while(TFcm<Tn)
         end
     end
  %------------------------------------------------------------------
-   if max(tmp)<0.0001
+   if TFcm > 3 & max(tmp) < 0.0001
          break;
   else
    cc = CI;       %updating cluster centers
